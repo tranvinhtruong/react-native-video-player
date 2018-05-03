@@ -215,9 +215,11 @@ export default class VideoPlayer extends Component {
     this.showControls();
   }
 
-  onToggleFullScreen() {
+  async onToggleFullScreen() {
     if (Platform.OS === 'android') {
-      NativeModules.FullscreenVideoPlayerModule.showFullscreen(this.props.video.uri);
+      var {currentPosition} = await NativeModules.FullscreenVideoPlayerModule.showFullscreen(this.props.video.uri, this.state.progress * this.state.duration);
+
+      this.player.seek(currentPosition / 1000)
     } else {
       this.player.presentFullscreenPlayer();
     }

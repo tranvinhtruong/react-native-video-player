@@ -14,6 +14,7 @@ import android.widget.VideoView;
 
 public class FullscreenVideoPlayerActivity extends AppCompatActivity {
     private String mVideoUrl;
+    private int mSeekTo;
 
     private static ProgressDialog mProgressDialog;
     VideoView mVideoView;
@@ -47,6 +48,7 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
         if (i != null) {
             mVideoView = (VideoView) findViewById(R.id.videoView);
             mVideoUrl = i.getStringExtra("VIDEO_URL");
+            mSeekTo = i.getIntExtra("SEEK_TO", 0);
             mProgressDialog = ProgressDialog.show(FullscreenVideoPlayerActivity.this, "", "Buffering video...", true);
             mProgressDialog.setCancelable(true);
             playVideo();
@@ -68,6 +70,7 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
             mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
                     mProgressDialog.dismiss();
+                    mVideoView.seekTo(mSeekTo * 1000);
                     mVideoView.start();
                 }
             });
@@ -81,5 +84,14 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
             System.out.println("Video Play Error :" + e.toString());
             finish();
         }
+    }
+
+    @Override
+    public void finish() {
+        Intent data = new Intent();
+        data.putExtra("CURRENT_POSITION", mVideoView.getCurrentPosition());
+        setResult(RESULT_OK, data);
+
+        super.finish();
     }
 }
