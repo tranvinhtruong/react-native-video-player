@@ -179,12 +179,9 @@ export default class VideoPlayer extends Component {
     this.setState({ progress: 1 });
 
     if (!this.props.loop) {
-      this.setState(
-        { isPlaying: false },
-        () => this.player.seek(0)
-      );
+      this.stop();
     } else {
-      this.player.seek(0);
+      this.seek(0);
     }
   }
 
@@ -219,7 +216,7 @@ export default class VideoPlayer extends Component {
     if (Platform.OS === 'android') {
       var {currentPosition} = await NativeModules.FullscreenVideoPlayerModule.showFullscreen(this.props.video.uri, this.state.progress * this.state.duration);
 
-      this.player.seek(currentPosition / 1000)
+      this.seek(currentPosition / 1000)
     } else {
       this.player.presentFullscreenPlayer();
     }
@@ -275,7 +272,7 @@ export default class VideoPlayer extends Component {
       progress,
     });
 
-    this.player.seek(progress * this.state.duration);
+    this.seek(progress * this.state.duration);
   }
 
   getSizeStyles() {
@@ -318,7 +315,9 @@ export default class VideoPlayer extends Component {
   }
 
   seek(t) {
-    this.player.seek(t);
+    if (this.player) {
+      this.player.seek(t);
+    }
   }
 
   stop() {
