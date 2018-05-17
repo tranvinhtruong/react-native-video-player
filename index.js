@@ -323,10 +323,10 @@ export default class VideoPlayer extends Component {
   stop() {
     this.setState({
       isPlaying: false,
-      progress: 0,
+    }, () => {
+      this.seek(0);
+      this.showControls();
     });
-    this.seek(0);
-    this.showControls();
   }
 
   pause() {
