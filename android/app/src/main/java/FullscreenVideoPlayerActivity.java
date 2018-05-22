@@ -64,7 +64,7 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
     private void playVideo() {
         try {
             getWindow().setFormat(PixelFormat.TRANSLUCENT);
-            final MediaController mediaController = new MediaController(FullscreenVideoPlayerActivity.this);
+            final MediaController mediaController = new MediaController(FullscreenVideoPlayerActivity.this, !mDisableSeek);
             mediaController.setAnchorView(mVideoView);
 
             Uri video = Uri.parse(mVideoUrl);
