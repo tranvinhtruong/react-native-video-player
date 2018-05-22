@@ -47,13 +47,14 @@ public class FullscreenVideoPlayerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void showFullscreen(final String videoUrl, final int seekTo, final Promise promise) {
+    public void showFullscreen(final String videoUrl, final int seekTo, final boolean disableSeek, final Promise promise) {
         mPromise = promise;
 
         Context context = getReactApplicationContext();
         Intent intent = new Intent(context, FullscreenVideoPlayerActivity.class); // mContext got from your overriden constructor
         intent.putExtra("VIDEO_URL", videoUrl);
         intent.putExtra("SEEK_TO", seekTo);
+        intent.putExtra("DISABLE_SEEK", disableSeek);
         getCurrentActivity().startActivityForResult(intent, PLAY_VIDEO_REQUEST);
     }
 }

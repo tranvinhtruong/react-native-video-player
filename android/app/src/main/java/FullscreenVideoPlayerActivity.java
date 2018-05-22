@@ -7,14 +7,17 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 public class FullscreenVideoPlayerActivity extends AppCompatActivity {
     private String mVideoUrl;
     private int mSeekTo;
+    private boolean mDisableSeek;
 
     private static ProgressDialog mProgressDialog;
     VideoView mVideoView;
@@ -49,6 +52,7 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
             mVideoView = (VideoView) findViewById(R.id.videoView);
             mVideoUrl = i.getStringExtra("VIDEO_URL");
             mSeekTo = i.getIntExtra("SEEK_TO", 0);
+            mDisableSeek = i.getBooleanExtra("DISABLE_SEEK", false);
             mProgressDialog = ProgressDialog.show(FullscreenVideoPlayerActivity.this, "", "Buffering video...", true);
             mProgressDialog.setCancelable(true);
             playVideo();
@@ -60,7 +64,7 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
     private void playVideo() {
         try {
             getWindow().setFormat(PixelFormat.TRANSLUCENT);
-            MediaController mediaController = new MediaController(FullscreenVideoPlayerActivity.this);
+            final MediaController mediaController = new MediaController(FullscreenVideoPlayerActivity.this);
             mediaController.setAnchorView(mVideoView);
 
             Uri video = Uri.parse(mVideoUrl);
@@ -69,6 +73,17 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
             mVideoView.requestFocus();
             mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
+                    if (mDisableSeek) {
+                        final int mediaControllerProgressId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
+                        final SeekBar seekBarVideo = (SeekBar) mediaController.findViewById(mediaControllerProgressId);
+                        seekBarVideo.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                return true;
+                            }
+                        });
+                    }
+
                     mProgressDialog.dismiss();
                     mVideoView.seekTo(mSeekTo * 1000);
                     mVideoView.start();
