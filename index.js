@@ -498,7 +498,7 @@ export default class VideoPlayer extends Component {
                 this.onPlayPress();
             }}
             onLongPress={() => {
-              if (fullScreenOnLongPress && Platform.OS !== 'android')
+              if (fullScreenOnLongPress)
                 this.onToggleFullScreen();
             }}
           />
