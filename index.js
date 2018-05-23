@@ -326,6 +326,10 @@ export default class VideoPlayer extends Component {
     }, () => {
       this.seek(0);
       this.showControls();
+
+      if (Platform.OS === 'ios') {
+        this.player.dismissFullscreenPlayer();
+      }
     });
   }
 
