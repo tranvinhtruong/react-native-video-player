@@ -333,6 +333,14 @@ export default class VideoPlayer extends Component {
     });
   }
 
+  presentFullscreenPlayer() {
+    this.player.presentFullscreenPlayer()
+  }
+
+  dismissFullscreenPlayer() {
+    this.player.dismissFullscreenPlayer()
+  }
+
   pause() {
     this.setState({
       isPlaying: false,
