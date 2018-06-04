@@ -173,7 +173,7 @@ export default class VideoPlayer extends Component {
 
     if (this.props.endWithThumbnail) {
       this.setState({ isStarted: false });
-      this.player.dismissFullscreenPlayer();
+      this.dismissFullscreenPlayer();
     }
 
     this.setState({ progress: 1 });
@@ -218,7 +218,7 @@ export default class VideoPlayer extends Component {
 
       this.seek(currentPosition / 1000)
     } else {
-      this.player.presentFullscreenPlayer();
+      this.presentFullscreenPlayer();
     }
   }
 
@@ -321,24 +321,28 @@ export default class VideoPlayer extends Component {
   }
 
   stop() {
+    if (Platform.OS === 'ios') {
+      this.dismissFullscreenPlayer();
+    }
+
     this.setState({
       isPlaying: false,
     }, () => {
       this.seek(0);
       this.showControls();
-
-      if (Platform.OS === 'ios') {
-        this.player.dismissFullscreenPlayer();
-      }
     });
   }
 
   presentFullscreenPlayer() {
-    this.player.presentFullscreenPlayer()
+    if (this.player) {
+      this.player.presentFullscreenPlayer()
+    }
   }
 
   dismissFullscreenPlayer() {
-    this.player.dismissFullscreenPlayer()
+    if (this.player) {
+      this.player.dismissFullscreenPlayer()
+    }
   }
 
   pause() {
