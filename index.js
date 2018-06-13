@@ -213,14 +213,12 @@ export default class VideoPlayer extends Component {
   }
 
   async onToggleFullScreen() {
-    // onToggleFullScreen prop is allowed on iOS platform for custom implementation
-    // Android will override custom onToggleFullScreen implementation
-    if (Platform.OS === 'android') {
+    if(this.props.onToggleFullScreen) {
+      this.props.onToggleFullScreen();
+    } else if (Platform.OS === 'android') {
       var {currentPosition} = await NativeModules.FullscreenVideoPlayerModule.showFullscreen(this.props.video.uri, this.state.progress * this.state.duration, this.props.disableSeek);
       
       this.seek(currentPosition / 1000)
-    } else if(this.props.onToggleFullScreen) {
-      this.props.onToggleFullScreen();
     } else {
       this.presentFullscreenPlayer();
     }
