@@ -1,4 +1,4 @@
-package com.my.package;
+package com.smartengineersinc.RNVideoPlayer;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

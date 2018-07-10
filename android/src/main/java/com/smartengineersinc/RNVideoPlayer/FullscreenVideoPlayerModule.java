@@ -1,4 +1,4 @@
-package com.my.package;
+package com.smartengineersinc.RNVideoPlayer;
 
 import android.app.Activity;
 import android.content.Context;

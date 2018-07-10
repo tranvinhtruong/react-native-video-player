@@ -84,41 +84,4 @@ All other props are passed to the react-native-video component.
 
 ## Setting up fullscreen on Android
 
-Step 1:
-
-Copy 3 java files (FullscreenVideoPlayerPackage.java, FullscreenVideoPlayerModule.java, FullscreenVideoPlayerActivity.java) from this repo's ```android\app\src\main\java``` folder into android's app ```android\app\src\main\java\your\package\folder``` (same folder as ```MainApplication.java```, ```MainActivity.java```) and replace ```package com.my.package;``` (the first line in these 3  java files) with your package.
-
-Step 2:
-
-Open ```MainApplication.java``` file and add ```new FullscreenVideoPlayerPackage()``` into ```getPackages()```:
-```
-    @Override
-    protected List<ReactPackage> getPackages() {
-        return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            ...
-            new FullscreenVideoPlayerPackage(),
-            ...
-        );
-    }
-```
-
-Step 3:
-
-Create ```layout``` folder in your ```android\app\src\main\res``` folder, then copy the ```player_fullscreen.xml``` from this repo's ```android\app\src\main\res\layout``` folder into new created folder.
-
-Step 4:
-
-Open ```AndroidManifest.xml``` and add this inside ```application``` tag:
-```
-    <application>
-    ...
-        <activity
-            android:name=".FullscreenVideoPlayerActivity"
-            android:configChanges="orientation|screenSize"
-        />
-    ...
-    </application>
-```    
-
-And then your fullscreen should be working and ready to go!
+react-native link react-native-video-player
