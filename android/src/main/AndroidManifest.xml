@@ -1,1 +1,10 @@
-<manifest package="com.smartengineersinc.RNVideoPlayer" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.smartengineersinc.RNVideoPlayer">
+
+    <application>
+      <activity
+        android:name=".FullscreenVideoPlayerActivity"
+        android:configChanges="orientation|screenSize"
+      />
+    </application>
+</manifest>
