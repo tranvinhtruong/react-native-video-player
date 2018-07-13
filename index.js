@@ -249,7 +249,7 @@ export default class VideoPlayer extends Component {
   }
 
   onSeekGrant(e) {
-    this.seekTouchStart = e.nativeEvent.pageX;
+    this.seekTouchStart = this.props.isFullScreen ? e.nativeEvent.locationX : e.nativeEvent.pageX;
     this.seekProgressStart = this.state.progress;
     this.wasPlayingBeforeSeek = this.state.isPlaying;
     this.setState({
@@ -267,16 +267,24 @@ export default class VideoPlayer extends Component {
   }
 
   onSeek(e) {
-    const diff = e.nativeEvent.pageX - this.seekTouchStart;
+    if (this.props.disableFF) {
+      if (this.props.isFullScreen) {
+        if (this.seekTouchStart < e.nativeEvent.locationX) {
+          return
+        }
+      } else if (this.seekTouchStart < e.nativeEvent.pageX) {
+        return
+      }
+    }
+
+    const diff = (this.props.isFullScreen ? e.nativeEvent.locationX : e.nativeEvent.pageX) - this.seekTouchStart;
     const ratio = 100 / this.seekBarWidth;
     const progress = this.seekProgressStart + ((ratio * diff) / 100);
-    if (!this.props.disableFF || (progress * this.state.duration) < this.state.currentTime) {
-      this.setState({
-        progress,
-      });
+    this.setState({
+      progress,
+    });
 
-      this.seek(progress * this.state.duration);
-    }
+    this.seek(progress * this.state.duration);
   }
 
   getSizeStyles() {
