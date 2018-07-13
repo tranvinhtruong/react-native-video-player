@@ -162,6 +162,7 @@ export default class VideoPlayer extends Component {
       this.props.onProgress(event);
     }
     this.setState({
+      currentTime: event.currentTime,
       progress: event.currentTime / (this.props.duration || this.state.duration),
     });
   }
@@ -269,12 +270,13 @@ export default class VideoPlayer extends Component {
     const diff = e.nativeEvent.pageX - this.seekTouchStart;
     const ratio = 100 / this.seekBarWidth;
     const progress = this.seekProgressStart + ((ratio * diff) / 100);
+    if (!this.props.disableFF || (progress * this.state.duration) < this.state.currentTime) {
+      this.setState({
+        progress,
+      });
 
-    this.setState({
-      progress,
-    });
-
-    this.seek(progress * this.state.duration);
+      this.seek(progress * this.state.duration);
+    }
   }
 
   getSizeStyles() {
@@ -570,6 +572,7 @@ VideoPlayer.propTypes = {
   hideControlsOnStart: PropTypes.bool,
   endWithThumbnail: PropTypes.bool,
   disableSeek: PropTypes.bool,
+  disableFF: PropTypes.bool,
   pauseOnPress: PropTypes.bool,
   fullScreenOnLongPress: PropTypes.bool,
   customStyles: PropTypes.shape({
@@ -609,6 +612,7 @@ VideoPlayer.defaultProps = {
   loop: false,
   resizeMode: 'contain',
   disableSeek: false,
+  disableFF: false,
   pauseOnPress: false,
   fullScreenOnLongPress: false,
   customStyles: {},
