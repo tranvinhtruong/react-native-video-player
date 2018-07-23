@@ -2,6 +2,7 @@ package com.smartengineersinc.RNVideoPlayer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -9,8 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -18,6 +21,8 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
     private String mVideoUrl;
     private int mSeekTo;
     private boolean mDisableSeek;
+    private boolean mDisableFF;
+    private int mStartProgress;
 
     private static ProgressDialog mProgressDialog;
     VideoView mVideoView;
@@ -53,6 +58,7 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
             mVideoUrl = i.getStringExtra("VIDEO_URL");
             mSeekTo = i.getIntExtra("SEEK_TO", 0);
             mDisableSeek = i.getBooleanExtra("DISABLE_SEEK", false);
+            mDisableFF = i.getBooleanExtra("DISABLE_FAST_FORWARD", false);
             mProgressDialog = ProgressDialog.show(FullscreenVideoPlayerActivity.this, "", "Buffering video...", true);
             mProgressDialog.setCancelable(true);
             playVideo();
@@ -73,6 +79,35 @@ public class FullscreenVideoPlayerActivity extends AppCompatActivity {
             mVideoView.requestFocus();
             mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
+                    if (mDisableFF) {
+                        final int ffButtonId = getResources().getIdentifier("ffwd", "id", "android");
+                        final ImageButton ffButton = (ImageButton) mediaController.findViewById(ffButtonId);
+                        if (ffButton != null) {
+                            ffButton.setClickable(false);
+                            ffButton.setColorFilter(Color.GRAY);
+                        }
+
+                        final int mediaControllerProgressId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
+                        final SeekBar seekBarVideo = (SeekBar) mediaController.findViewById(mediaControllerProgressId);
+                        seekBarVideo.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (fromUser && progress < mStartProgress) {
+                                    mVideoView.seekTo(mVideoView.getDuration() * progress / seekBar.getMax());
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                mStartProgress = seekBar.getProgress();
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                            }
+                        });
+                    }
+
                     if (mDisableSeek) {
                         final int mediaControllerProgressId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
                         final SeekBar seekBarVideo = (SeekBar) mediaController.findViewById(mediaControllerProgressId);

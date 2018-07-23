@@ -47,7 +47,7 @@ public class FullscreenVideoPlayerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void showFullscreen(final String videoUrl, final int seekTo, final boolean disableSeek, final Promise promise) {
+    public void showFullscreen(final String videoUrl, final int seekTo, final boolean disableSeek, final boolean disableFF, final Promise promise) {
         mPromise = promise;
 
         Context context = getReactApplicationContext();
@@ -55,6 +55,7 @@ public class FullscreenVideoPlayerModule extends ReactContextBaseJavaModule {
         intent.putExtra("VIDEO_URL", videoUrl);
         intent.putExtra("SEEK_TO", seekTo);
         intent.putExtra("DISABLE_SEEK", disableSeek);
+        intent.putExtra("DISABLE_FAST_FORWARD", disableFF);
         getCurrentActivity().startActivityForResult(intent, PLAY_VIDEO_REQUEST);
     }
 }
