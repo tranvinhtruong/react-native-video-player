@@ -15,7 +15,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 
 public class FullscreenVideoPlayerModule extends ReactContextBaseJavaModule {
-    private static final int PLAY_VIDEO_REQUEST = 784336;
+    private static final int PLAY_VIDEO_REQUEST = 7843;
 
     private Promise mPromise;
 
